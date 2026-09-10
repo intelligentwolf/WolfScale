@@ -289,6 +289,8 @@ curl -X POST -H "X-API-Key: wsk_..." -H "Content-Type: application/json" \
                         <tr><td><code class="method-post">POST</code></td><td><code>/api/compose/stacks/{name}/up</code></td><td>Bring up a Compose stack (equivalent to <code>docker compose up -d</code>)</td></tr>
                         <tr><td><code class="method-post">POST</code></td><td><code>/api/compose/stacks/{name}/down</code></td><td>Bring down a Compose stack, stopping and removing all services</td></tr>
                         <tr><td><code class="method-post">POST</code></td><td><code>/api/compose/stacks/{name}/pull</code></td><td>Pull the latest images for all services in a Compose stack</td></tr>
+                        <tr><td><code class="method-post">POST</code></td><td><code>/api/compose/stacks/{name}/restart</code></td><td>Restart the running containers of a Compose stack in place (<code>docker compose restart</code>) &mdash; same containers, same image</td></tr>
+                        <tr><td><code class="method-post">POST</code></td><td><code>/api/compose/stacks/{name}/recreate</code></td><td>Recreate every container in a Compose stack from its compose file (<code>docker compose up -d --force-recreate --remove-orphans</code>); volumes are kept. Same report as <code>/up</code></td></tr>
                         <tr><td><code class="method-get">GET</code></td><td><code>/api/compose/stacks/{name}/logs</code></td><td>Retrieve combined logs from all services in a Compose stack</td></tr>
                     </tbody>
                 </table>
