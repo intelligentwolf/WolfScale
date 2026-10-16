@@ -3,7 +3,7 @@
 //! Uses broadcast (255.255.255.255) for node discovery, same as WolfScale.
 
 use std::collections::HashMap;
-use std::net::SocketAddr;
+use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 use std::net::UdpSocket;
 use std::sync::{Arc, RwLock};
 use std::thread;
@@ -222,6 +222,51 @@ fn parse_message(message: &str) -> Option<(String, String, bool, bool)> {
     Some((node_id, address, is_server, is_leader))
 }
 
+/// Directed-broadcast address of `ip/prefix`, or None for /31, /32 and
+/// out-of-range prefixes (no broadcast address exists there).
+fn directed_broadcast(ip: Ipv4Addr, prefix: u8) -> Option<Ipv4Addr> {
+    if prefix > 30 {
+        return None;
+    }
+    let host_mask = u32::MAX.checked_shr(u32::from(prefix)).unwrap_or(0);
+    Some(Ipv4Addr::from(u32::from(ip) | host_mask))
+}
+
+/// Prefix length of `ip` as configured on whichever local interface holds it
+/// (getifaddrs(3)), or None if no interface has that address.
+fn local_ipv4_prefix(ip: Ipv4Addr) -> Option<u8> {
+    let mut head: *mut libc::ifaddrs = std::ptr::null_mut();
+    // SAFETY: getifaddrs fills `head` with a list we own until freeifaddrs.
+    if unsafe { libc::getifaddrs(&mut head) } != 0 {
+        return None;
+    }
+    let mut found = None;
+    let mut cur = head;
+    while !cur.is_null() {
+        // SAFETY: `cur` is a node of the list getifaddrs returned; addr and
+        // netmask are checked for null and for AF_INET before being read as
+        // sockaddr_in.
+        unsafe {
+            let ifa = &*cur;
+            if !ifa.ifa_addr.is_null()
+                && !ifa.ifa_netmask.is_null()
+                && i32::from((*ifa.ifa_addr).sa_family) == libc::AF_INET
+            {
+                let addr = &*(ifa.ifa_addr as *const libc::sockaddr_in);
+                if Ipv4Addr::from(u32::from_be(addr.sin_addr.s_addr)) == ip {
+                    let mask = &*(ifa.ifa_netmask as *const libc::sockaddr_in);
+                    found = Some(u32::from_be(mask.sin_addr.s_addr).count_ones() as u8);
+                    break;
+                }
+            }
+            cur = ifa.ifa_next;
+        }
+    }
+    // SAFETY: `head` came from a successful getifaddrs and is freed once.
+    unsafe { libc::freeifaddrs(head) };
+    found
+}
+
 /// Run the discovery broadcaster
 fn run_broadcaster(
     node_id: String,
@@ -244,19 +289,22 @@ fn run_broadcaster(
         .parse()
         .unwrap()];
 
-    // If bind address is on a specific IP (not 0.0.0.0), also broadcast to its /24 subnet
-    // e.g. bind 10.10.10.3:8650 → broadcast to 10.10.10.255:8651
+    // If bind address is on a specific IP (not 0.0.0.0), also broadcast to its
+    // own subnet, using the prefix actually configured on the interface. This
+    // used to assume /24 (".255" of the first three octets); on a /16 WolfNet
+    // that address is an ordinary host to the kernel, and the packet bounced
+    // back and forth between WolfNet nodes (klas, 2026-10-16).
     if let Ok(bind_sock) = bind_address.parse::<SocketAddr>() {
-        let ip = bind_sock.ip();
-        if let std::net::IpAddr::V4(v4) = ip {
-            let octets = v4.octets();
-            if octets[0] != 0 {
-                let subnet_bcast = format!(
-                    "{}.{}.{}.255:{}",
-                    octets[0], octets[1], octets[2], discovery_port
-                );
-                if let Ok(addr) = subnet_bcast.parse::<SocketAddr>() {
-                    broadcast_addrs.push(addr);
+        if let IpAddr::V4(v4) = bind_sock.ip() {
+            if v4.octets()[0] != 0 {
+                match local_ipv4_prefix(v4).and_then(|p| directed_broadcast(v4, p)) {
+                    Some(bcast) => broadcast_addrs.push(SocketAddr::new(IpAddr::V4(bcast), discovery_port)),
+                    None => warn!(
+                        "No subnet broadcast for bind address {} (not found on a local \
+                         interface, or a /31-/32 prefix); using 255.255.255.255 and \
+                         configured peers only",
+                        v4
+                    ),
                 }
             }
         }
@@ -435,5 +483,24 @@ mod tests {
         // No discovery line, or no port in the URL → the compiled fallback.
         assert_eq!(discovery_port_from_config(&None), DISCOVERY_PORT);
         assert_eq!(discovery_port_from_config(&Some("udp://10.0.0.1".into())), DISCOVERY_PORT);
+    }
+
+    #[test]
+    fn subnet_broadcast_follows_the_prefix_not_a_fixed_24() {
+        let ip: Ipv4Addr = "10.100.10.7".parse().unwrap();
+        assert_eq!(directed_broadcast(ip, 24), Some("10.100.10.255".parse().unwrap()));
+        // The klas case: on a /16 the broadcast is .255.255, not .10.255.
+        assert_eq!(directed_broadcast(ip, 16), Some("10.100.255.255".parse().unwrap()));
+        assert_eq!(directed_broadcast(ip, 0), Some(Ipv4Addr::BROADCAST));
+        assert_eq!(directed_broadcast(ip, 31), None);
+        assert_eq!(directed_broadcast(ip, 32), None);
+    }
+
+    #[test]
+    fn loopback_prefix_is_read_from_the_interface() {
+        // Every Linux host has 127.0.0.1/8 on lo.
+        assert_eq!(local_ipv4_prefix(Ipv4Addr::LOCALHOST), Some(8));
+        // TEST-NET-3 is never assigned to a local interface.
+        assert_eq!(local_ipv4_prefix("203.0.113.254".parse().unwrap()), None);
     }
 }
