@@ -7,7 +7,7 @@
 # 'wolfscale-latest' GitHub release). Only falls back to a source build if no
 # prebuilt binary is available for this CPU architecture or the download fails.
 #
-# Usage: curl -sSL https://raw.githubusercontent.com/wolfsoftwaresystemsltd/WolfScale/main/setup.sh | bash
+# Usage: curl -sSL https://raw.githubusercontent.com/intelligentwolf/WolfScale/main/setup.sh | bash
 #
 
 set -e
@@ -41,7 +41,7 @@ case "$(uname -m)" in
     *) ARCH="" ;;
 esac
 
-RELEASE_BASE="https://github.com/wolfsoftwaresystemsltd/WolfScale/releases/download/wolfscale-latest"
+RELEASE_BASE="https://github.com/intelligentwolf/WolfScale/releases/download/wolfscale-latest"
 
 # Root-only environments (e.g. a minimal Proxmox VE host) frequently ship no
 # `sudo` binary. Use sudo only when we're NOT already root; if we're not root
@@ -83,7 +83,7 @@ if [ -d "$INSTALL_DIR/.git" ]; then
         $SUDO truncate -s 0 /var/log/wolfscale/wolfscale.log
     fi
 else
-    $SUDO git clone --depth 1 https://github.com/wolfsoftwaresystemsltd/WolfScale.git "$INSTALL_DIR"
+    $SUDO git clone --depth 1 https://github.com/intelligentwolf/WolfScale.git "$INSTALL_DIR"
     cd "$INSTALL_DIR"
 fi
 $SUDO chown -R "$USER:$USER" "$INSTALL_DIR"

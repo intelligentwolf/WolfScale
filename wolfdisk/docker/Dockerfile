@@ -13,7 +13,7 @@
 #     -v /mnt/wolfdisk:/mnt/wolfdisk:rshared \
 #     -e WOLFDISK_ROLE=client \
 #     -e WOLFDISK_PEERS=<leader_ip:8650> \
-#     ghcr.io/wolfsoftwaresystemsltd/wolfdisk:latest
+#     ghcr.io/intelligentwolf/wolfdisk:latest
 #
 # Unraid: bind the chunk store (/var/lib/wolfdisk) onto the ARRAY, not a
 # named volume — named volumes live inside Unraid's size-limited docker

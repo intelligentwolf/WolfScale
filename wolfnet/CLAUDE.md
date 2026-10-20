@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## THIS DIRECTORY IS A MIRROR — releases come from the WolfNet repo
 
-The shipping source of WolfNet is **`github.com/wolfsoftwaresystemsltd/WolfNet`**,
+The shipping source of WolfNet is **`github.com/intelligentwolf/WolfNet`**,
 not this directory. `wolfstack/setup.sh` clones that repo to build from source
 and downloads its release binaries; nothing consumes the copy here.
 

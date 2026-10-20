@@ -2,10 +2,10 @@
 name = "wolfdisk"
 version = "2.11.13"
 edition = "2021"
-authors = ["Wolf Software Systems Ltd"]
+authors = ["IntelligentWolf Ltd"]
 description = "Distributed file system with replicated and shared storage modes"
 license = "MIT"
-repository = "https://github.com/wolfsoftwaresystemsltd/wolfdisk"
+repository = "https://github.com/intelligentwolf/WolfScale"
 
 [dependencies]
 # FUSE filesystem

@@ -170,7 +170,7 @@ async fn run_start(config_path: PathBuf, bootstrap: bool) -> Result<()> {
   ░   ░  ░ ░ ░ ▒    ░ ░    ░ ░   ░  ░  ░  ░ ░   ░   ░   ▒     ░ ░      ░   
     ░        ░ ░      ░  ░             ░        ░       ░  ░    ░  ░   ░  ░
                                                                            
-        (C) Wolf Software Systems Ltd -- https://wolf.uk.com
+        (C) IntelligentWolf Ltd -- https://wolf.uk.com
 "#);
 
     tracing::info!("Starting WolfScale node...");

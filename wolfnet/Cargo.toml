@@ -2,7 +2,7 @@
 name = "wolfnet"
 version = "0.5.27"
 edition = "2021"
-authors = ["Wolf Software Systems Ltd"]
+authors = ["IntelligentWolf Ltd"]
 description = "Secure private mesh networking over the internet"
 
 [[bin]]

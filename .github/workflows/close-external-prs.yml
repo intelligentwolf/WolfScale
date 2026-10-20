@@ -3,7 +3,7 @@
 #
 # Why: WolfStack ships under a defined commercial-licence model and we
 # don't accept external code contributions — every change is reviewed
-# and signed off by Wolf Software Systems Ltd staff. Without this
+# and signed off by IntelligentWolf Ltd staff. Without this
 # workflow, the inbox fills with low-quality / regex-scanner / AI-spam
 # PRs that have to be triaged manually (the cy701 attempt on 2026-05-15
 # being the prompt for this guard). Bug reports and feature requests
@@ -69,7 +69,7 @@ jobs:
               `Hi @${author} — thanks for your interest in WolfStack.`,
               ``,
               `This repository is the source of a commercially-licensed product `,
-              `from Wolf Software Systems Ltd. We do not accept external pull requests; `,
+              `from IntelligentWolf Ltd. We do not accept external pull requests; `,
               `all changes are reviewed and authored in-house.`,
               ``,
               `If you've spotted a bug, found a security issue, or want to suggest `,

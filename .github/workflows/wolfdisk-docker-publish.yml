@@ -105,5 +105,5 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            ghcr.io/wolfsoftwaresystemsltd/wolfdisk:latest
-            ghcr.io/wolfsoftwaresystemsltd/wolfdisk:${{ steps.version.outputs.version }}
+            ghcr.io/intelligentwolf/wolfdisk:latest
+            ghcr.io/intelligentwolf/wolfdisk:${{ steps.version.outputs.version }}

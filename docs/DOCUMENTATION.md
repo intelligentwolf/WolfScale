@@ -1342,5 +1342,5 @@ heartbeat_interval_ms = 250  # Default: 500
 
 - **Discord:** [Join our community](https://discord.gg/q9qMjHjUQY)
 - **Website:** [wolf.uk.com](https://wolf.uk.com)
-- **Issues:** [GitHub Issues](https://github.com/wolfsoftwaresystemsltd/WolfScale/issues)
+- **Issues:** [GitHub Issues](https://github.com/intelligentwolf/WolfScale/issues)
 - **Support Us:** [Patreon](https://www.patreon.com/15362110/join)

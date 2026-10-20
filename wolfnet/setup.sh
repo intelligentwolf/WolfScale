@@ -4,7 +4,7 @@
 # Installs WolfNet on Ubuntu/Debian (apt), Fedora/RHEL (dnf/yum),
 # Arch/Manjaro/CachyOS (pacman), openSUSE (zypper), or Alpine (apk)
 #
-# Usage: curl -sSL https://raw.githubusercontent.com/wolfsoftwaresystemsltd/WolfNet/main/setup.sh | sudo bash
+# Usage: curl -sSL https://raw.githubusercontent.com/intelligentwolf/WolfNet/main/setup.sh | sudo bash
 #
 
 set -e
@@ -77,7 +77,7 @@ PREBUILT_OK=false
 if [ -n "$BINARY_ARCH" ]; then
     echo ""
     echo "Downloading prebuilt binaries for ${BINARY_ARCH}..."
-    PREBUILT_URL="https://github.com/wolfsoftwaresystemsltd/WolfNet/releases/latest/download"
+    PREBUILT_URL="https://github.com/intelligentwolf/WolfNet/releases/latest/download"
     if curl -fSL --connect-timeout 10 --max-time 120 -o /tmp/wolfnet "$PREBUILT_URL/wolfnet-${BINARY_ARCH}" 2>/dev/null; then
         chmod +x /tmp/wolfnet
         curl -fSL --connect-timeout 10 --max-time 60 -o /tmp/wolfnetctl "$PREBUILT_URL/wolfnetctl-${BINARY_ARCH}" 2>/dev/null && chmod +x /tmp/wolfnetctl || true
@@ -183,7 +183,7 @@ if [ "$PREBUILT_OK" = "false" ]; then
         git fetch origin
         git reset --hard origin/main
     else
-        git clone https://github.com/wolfsoftwaresystemsltd/WolfScale.git "$INSTALL_DIR"
+        git clone https://github.com/intelligentwolf/WolfScale.git "$INSTALL_DIR"
         cd "$INSTALL_DIR"
     fi
 

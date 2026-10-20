@@ -3,7 +3,7 @@
 # WolfScale Load Balancer Quick Install Script
 # Installs WolfScale in Load Balancer mode
 #
-# Usage: curl -sSL https://raw.githubusercontent.com/wolfsoftwaresystemsltd/WolfScale/main/setup_lb.sh | bash
+# Usage: curl -sSL https://raw.githubusercontent.com/intelligentwolf/WolfScale/main/setup_lb.sh | bash
 #
 
 set -e
@@ -73,7 +73,7 @@ if [ -d "$INSTALL_DIR" ]; then
     sudo git fetch origin
     sudo git reset --hard origin/main
 else
-    sudo git clone https://github.com/wolfsoftwaresystemsltd/WolfScale.git "$INSTALL_DIR"
+    sudo git clone https://github.com/intelligentwolf/WolfScale.git "$INSTALL_DIR"
     cd "$INSTALL_DIR"
 fi
 

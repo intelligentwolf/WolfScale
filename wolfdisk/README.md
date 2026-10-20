@@ -2,7 +2,7 @@
 
 🐺💾 **Distributed File System for Linux**
 
-WolfDisk is a distributed file system that provides easy-to-use shared and replicated storage across Linux machines. Built on the same proven consensus mechanisms as [WolfScale](https://github.com/wolfsoftwaresystemsltd/WolfScale).
+WolfDisk is a distributed file system that provides easy-to-use shared and replicated storage across Linux machines. Built on the same proven consensus mechanisms as [WolfScale](https://github.com/intelligentwolf/WolfScale).
 
 ## Features
 
@@ -22,7 +22,7 @@ WolfDisk is a distributed file system that provides easy-to-use shared and repli
 ## Quick Install
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/wolfsoftwaresystemsltd/WolfScale/main/wolfdisk/setup.sh | bash
+curl -sSL https://raw.githubusercontent.com/intelligentwolf/WolfScale/main/wolfdisk/setup.sh | bash
 ```
 
 The installer will prompt you for:
@@ -63,7 +63,7 @@ sudo dnf install fuse3-devel fuse3
 ### Build
 
 ```bash
-git clone https://github.com/wolfsoftwaresystemsltd/WolfScale.git
+git clone https://github.com/intelligentwolf/WolfScale.git
 cd WolfScale/wolfdisk
 cargo build --release
 sudo cp target/release/wolfdisk /usr/local/bin/
@@ -104,7 +104,7 @@ docker run -d --name wolfdisk --network host \
   -v /mnt/wolfdisk:/mnt/wolfdisk:rshared \
   -e WOLFDISK_ROLE=client \
   -e WOLFDISK_PEERS=<leader_ip:8650> \
-  ghcr.io/wolfsoftwaresystemsltd/wolfdisk:latest
+  ghcr.io/intelligentwolf/wolfdisk:latest
 ```
 
 `/var/lib/wolfdisk` is the chunk store — every byte the cluster asks this
@@ -408,7 +408,7 @@ role = "client"
 
 [MIT License](../LICENSE) — Free to use, modify, and distribute without restriction.
 
-© 2024-2026 Wolf Software Systems Ltd
+© 2024-2026 IntelligentWolf Ltd
 
 ---
 

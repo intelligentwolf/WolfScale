@@ -7,7 +7,7 @@
 
 services:
   wolfnet:
-    image: ghcr.io/wolfsoftwaresystemsltd/wolfnet:latest
+    image: ghcr.io/intelligentwolf/wolfnet:latest
     container_name: wolfnet
     restart: unless-stopped
     network_mode: host

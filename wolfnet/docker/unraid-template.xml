@@ -1,17 +1,17 @@
 <?xml version="1.0"?>
 <Container version="2">
   <Name>WolfNet</Name>
-  <Repository>ghcr.io/wolfsoftwaresystemsltd/wolfnet:latest</Repository>
-  <Registry>https://github.com/wolfsoftwaresystemsltd/wolfnet/pkgs/container/wolfnet</Registry>
+  <Repository>ghcr.io/intelligentwolf/wolfnet:latest</Repository>
+  <Registry>https://github.com/intelligentwolf/WolfNet/pkgs/container/wolfnet</Registry>
   <Network>host</Network>
   <Privileged>false</Privileged>
-  <Support>https://github.com/wolfsoftwaresystemsltd/wolfnet/issues</Support>
-  <Project>https://github.com/wolfsoftwaresystemsltd/wolfnet</Project>
+  <Support>https://github.com/intelligentwolf/WolfNet/issues</Support>
+  <Project>https://github.com/intelligentwolf/WolfNet</Project>
   <Overview>WolfNet is a secure private mesh VPN that creates encrypted tunnels between your servers using X25519 key exchange and ChaCha20-Poly1305 encryption. No WireGuard kernel module needed. Join your Unraid server to your WolfStack cluster overlay network.</Overview>
   <Category>Network:VPN</Category>
   <WebUI/>
   <TemplateURL/>
-  <Icon>https://raw.githubusercontent.com/wolfsoftwaresystemsltd/wolfnet/main/icon.png</Icon>
+  <Icon>https://wolfstack.org/images/wolfstack-logo.png</Icon>
   <ExtraParams>--cap-add=NET_ADMIN --device=/dev/net/tun:/dev/net/tun</ExtraParams>
   <PostArgs/>
   <DonateText>Support WolfStack development</DonateText>

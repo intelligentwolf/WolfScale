@@ -3,7 +3,7 @@
 # WolfDisk Quick Install Script
 # Installs WolfDisk on Ubuntu/Debian (apt) or Fedora/RHEL (dnf)
 #
-# Usage: curl -sSL https://raw.githubusercontent.com/wolfsoftwaresystemsltd/WolfScale/main/wolfdisk/setup.sh | bash
+# Usage: curl -sSL https://raw.githubusercontent.com/intelligentwolf/WolfScale/main/wolfdisk/setup.sh | bash
 #
 
 set -e
@@ -23,7 +23,7 @@ if [ "$EUID" -ne 0 ]; then
         # Pass our args through (`-s -- "$@"`) so non-interactive flags like
         # --node-id / --bind survive the sudo re-exec (WolfDisk install report
         # B4, 2026-06-08 — they were dropped here before).
-        SETUP_URL="https://raw.githubusercontent.com/wolfsoftwaresystemsltd/WolfScale/main/wolfdisk/setup.sh"
+        SETUP_URL="https://raw.githubusercontent.com/intelligentwolf/WolfScale/main/wolfdisk/setup.sh"
         curl -sSL "$SETUP_URL" | sudo bash -s -- "$@"
         exit $?
     fi
@@ -102,7 +102,7 @@ download_prebuilt() {
     echo "  Downloading prebuilt ${binary} for ${BINARY_ARCH}..."
     # Find download URL from the latest WolfScale release containing this asset
     local url
-    url=$(curl -sSL "https://api.github.com/repos/wolfsoftwaresystemsltd/WolfScale/releases" \
+    url=$(curl -sSL "https://api.github.com/repos/intelligentwolf/WolfScale/releases" \
         | grep "browser_download_url.*${asset}" | head -1 | cut -d'"' -f4)
     if [ -z "$url" ]; then
         echo "  ⚠ Prebuilt binary not available — will build from source"
@@ -238,7 +238,7 @@ if [ "$WOLFDISK_PREBUILT" = "false" ]; then
         git fetch origin
         git reset --hard origin/$BRANCH
     else
-        git clone -b "$BRANCH" https://github.com/wolfsoftwaresystemsltd/WolfScale.git "$INSTALL_DIR"
+        git clone -b "$BRANCH" https://github.com/intelligentwolf/WolfScale.git "$INSTALL_DIR"
         cd "$INSTALL_DIR"
     fi
 

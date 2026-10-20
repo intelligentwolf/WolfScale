@@ -6,11 +6,11 @@
 
 [![Rust](https://img.shields.io/badge/rust-1.70%2B-orange.svg)](https://www.rust-lang.org/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Sponsor](https://img.shields.io/badge/Sponsor-❤-ea4aaa.svg)](https://github.com/sponsors/wolfsoftwaresystemsltd)
+[![Sponsor](https://img.shields.io/badge/Sponsor-❤-ea4aaa.svg)](https://github.com/sponsors/intelligentwolf)
 
 **[wolfscale.org](https://wolfscale.org)** • **[wolf.uk.com](https://wolf.uk.com)** • **[Discord](https://discord.gg/q9qMjHjUQY)** • **[Reddit](https://www.reddit.com/r/WolfStack/)**
 
-© Wolf Software Systems Ltd
+© IntelligentWolf Ltd
 
 </div>
 
@@ -63,7 +63,7 @@ Works with MySQL, Percona, and Amazon RDS • **MariaDB recommended**
 
 ```bash
 # Install WolfScale on each server
-curl -sSL https://raw.githubusercontent.com/wolfsoftwaresystemsltd/WolfScale/main/setup.sh | bash
+curl -sSL https://raw.githubusercontent.com/intelligentwolf/WolfScale/main/setup.sh | bash
 ```
 
 ### Load Balancer
@@ -71,7 +71,7 @@ curl -sSL https://raw.githubusercontent.com/wolfsoftwaresystemsltd/WolfScale/mai
 Install the load balancer directly on any server that needs database access. It auto-discovers your cluster — no configuration needed.
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/wolfsoftwaresystemsltd/WolfScale/main/setup_lb.sh | bash
+curl -sSL https://raw.githubusercontent.com/intelligentwolf/WolfScale/main/setup_lb.sh | bash
 ```
 
 ```
@@ -117,7 +117,7 @@ WolfDisk is a FUSE-based distributed filesystem that shares and replicates files
 
 ```bash
 # Interactive installer - prompts for node ID, role, and discovery
-curl -sSL https://raw.githubusercontent.com/wolfsoftwaresystemsltd/WolfScale/main/wolfdisk/setup.sh | bash
+curl -sSL https://raw.githubusercontent.com/intelligentwolf/WolfScale/main/wolfdisk/setup.sh | bash
 ```
 
 ### Node Roles
@@ -156,7 +156,7 @@ WolfNet creates a secure, encrypted private network between your machines over t
 
 ```bash
 # Interactive installer — downloads binary, generates keys, creates systemd service
-curl -sSL https://raw.githubusercontent.com/wolfsoftwaresystemsltd/WolfScale/main/wolfnet/setup.sh | sudo bash
+curl -sSL https://raw.githubusercontent.com/intelligentwolf/WolfScale/main/wolfnet/setup.sh | sudo bash
 ```
 
 The installer will:
@@ -308,6 +308,51 @@ allowed_ip = "10.0.10.3"
 name = "home-server"
 ```
 
+### Running on Windows Subsystem for Linux (WSL)
+
+WolfNet is a Linux-native tool that talks directly to the kernel TUN driver (`/dev/net/tun`). That makes WSL support entirely dependent on which WSL version you're on:
+
+| WSL Version | Supported? | Why |
+|-------------|------------|-----|
+| **WSL1** | ❌ No | WSL1 is a syscall-translation layer with no `/dev/net/tun`. WolfNet exits immediately on startup with `Failed to open /dev/net/tun`. There's no workaround — WSL1 can't run any TUN/TAP-based VPN. |
+| **WSL2** | ✅ Yes (with caveats) | WSL2 runs a real Linux kernel. Recent Microsoft kernel images ship with `CONFIG_TUN=y`, so the TUN device is available and WolfNet's data plane runs normally. |
+
+**Setting it up on WSL2:**
+
+1. **Check the TUN device exists:**
+   ```bash
+   ls -l /dev/net/tun
+   ```
+   If missing, run `wsl --update` from PowerShell to pull the latest Microsoft kernel.
+
+2. **Pick a networking mode.** By default WSL2 sits behind a NAT'd Hyper-V virtual switch, so **inbound** UDP from peers won't reach you. Three options, best first:
+
+   - **Mirrored mode (Windows 11 22H2+, recommended)** — WSL2 shares the Windows host's IPs directly, no NAT. Add to `%UserProfile%\.wslconfig` on the Windows side:
+     ```ini
+     [wsl2]
+     networkingMode=mirrored
+     ```
+     Then `wsl --shutdown` and restart your WSL distro. Inbound UDP now works as if WolfNet were running on the Windows host itself.
+
+   - **Outbound-only with relay** — if you have at least one peer with a public IP, the WSL2 node connects out to it and other peers reach you via [Relay Forwarding](#nat-traversal-relay-forwarding). No Windows-side config needed. This is the easiest setup for laptop / dev-box use.
+
+   - **Manual port forwarding** — `netsh interface portproxy` on Windows is TCP-only and won't help with WolfNet's UDP. If you must use the default NATed networking mode and need direct inbound, a third-party tool like [`wsl-portforward`](https://github.com/microsoft/WSL/issues/4150) or a UDP forwarder is required.
+
+3. **Auto-start on `wsl` boot.** WSL2 doesn't run systemd by default. Enable it in `/etc/wsl.conf`:
+   ```ini
+   [boot]
+   systemd=true
+   ```
+   Then `wsl --shutdown` to apply. `systemctl enable --now wolfnet` then works as on any Linux host.
+
+4. **Install:** the standard installer works on WSL2 once the above is in place:
+   ```bash
+   curl -sSL https://raw.githubusercontent.com/intelligentwolf/WolfScale/main/wolfnet/setup.sh | sudo bash
+   ```
+   The setup script now detects Arch/Manjaro/CachyOS, openSUSE, and Alpine in addition to Debian/Ubuntu/Fedora/RHEL, so most WSL distros are covered out of the box.
+
+**What WSL2 won't give you:** Windows applications (browsers, RDP clients, etc.) **cannot** see WolfNet IPs in the default networking mode — only processes inside the WSL2 instance can. Mirrored mode is the only way for Windows-side apps to use WolfNet routes.
+
 ### Security
 
 | Layer | Technology |
@@ -360,12 +405,12 @@ name = "home-server"
 
 ## Support
 
-- ❤️ **Sponsor:** [Support development](https://github.com/sponsors/wolfsoftwaresystemsltd)
+- ❤️ **Sponsor:** [Support development](https://github.com/sponsors/intelligentwolf)
 - 💬 **Discord:** [Join our community](https://discord.gg/q9qMjHjUQY)
 - 🔥 **Reddit:** [r/WolfStack](https://www.reddit.com/r/WolfStack/)
 - 🌐 **Website:** [wolf.uk.com](https://wolf.uk.com)
-- ⭐ **GitHub:** [Star this repo](https://github.com/wolfsoftwaresystemsltd/WolfScale)
-- 🐛 **Issues:** [Report a bug](https://github.com/wolfsoftwaresystemsltd/WolfScale/issues)
+- ⭐ **GitHub:** [Star this repo](https://github.com/intelligentwolf/WolfScale)
+- 🐛 **Issues:** [Report a bug](https://github.com/intelligentwolf/WolfScale/issues)
 
 ---
 
@@ -373,11 +418,11 @@ name = "home-server"
 
 [MIT License](LICENSE) — Free to use, modify, and distribute without restriction.
 
-© 2024-2026 [Wolf Software Systems Ltd](https://wolf.uk.com/)
+© 2024-2026 [IntelligentWolf Ltd](https://wolf.uk.com/)
 
 ## ⚠️ Disclaimer
 
-**USE AT YOUR OWN RISK.** This software is provided "as is" without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose, and noninfringement. In no event shall Wolf Software Systems Ltd be liable for any claim, damages, or other liability arising from the use of this software.
+**USE AT YOUR OWN RISK.** This software is provided "as is" without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose, and noninfringement. In no event shall IntelligentWolf Ltd be liable for any claim, damages, or other liability arising from the use of this software.
 
 By using Wolf tools, you acknowledge that you are solely responsible for your data and any consequences of using this software.
 

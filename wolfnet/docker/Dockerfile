@@ -9,7 +9,7 @@
 #     --cap-add NET_ADMIN --device /dev/net/tun:/dev/net/tun \
 #     -v wolfnet-config:/etc/wolfnet \
 #     -e WOLFNET_JOIN_TOKEN=<token> \
-#     ghcr.io/wolfsoftwaresystemsltd/wolfnet:latest
+#     ghcr.io/intelligentwolf/wolfnet:latest
 
 FROM debian:bookworm-slim
 

@@ -15,7 +15,7 @@ use wolfdisk::{
 
 #[derive(Parser)]
 #[command(name = "wolfdisk")]
-#[command(author = "Wolf Software Systems Ltd")]
+#[command(author = "IntelligentWolf Ltd")]
 #[command(version = env!("CARGO_PKG_VERSION"))]
 #[command(about = "Distributed file system with replicated and shared storage", long_about = None)]
 struct Cli {
