@@ -171,6 +171,6 @@ impl QueryHandler {
             .await
             .map_err(crate::Error::Database)?;
 
-        Ok((result.rows_affected(), 0)) // TODO: get last_insert_id
+        Ok((result.rows_affected(), result.last_insert_id()))
     }
 }
