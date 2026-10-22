@@ -117,6 +117,7 @@ include 'includes/head.php';
                     <li><strong style="color:#ef4444;">Red</strong> &mdash; Below 95% uptime</li>
                 </ul>
                 <p>Overall uptime percentage is calculated and displayed alongside each service name.</p>
+                <p>Bars are history: a day keeps the colour it was recorded with, even after the cause is fixed. To start a monitor's record afresh, use the <strong>Reset uptime history</strong> button on its card. This clears its bars, uptime percentage and recent checks on every node in the cluster, and keeps the monitor and its settings. A node that is offline at the time clears its copy when it next receives the cluster's status page settings.</p>
 
                 <h3>Public Index</h3>
                 <p>An automatic index page at <code>/status</code> lists all enabled status pages, allowing visitors to discover all your public dashboards.</p>
